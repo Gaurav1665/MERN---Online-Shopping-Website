@@ -1,11 +1,17 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const schema = mongoose.Schema({
+    UserId: Number,
     UserProfileImage: String,
     UserName: String,
     UserEmail: String,
     UserPassword:String,
     UserContact: Number,
+    UserAddress: String,
+    UserCity:String,
+    UserState:String,
+    UserCountry:String,
+    UserPincode:Number,
 })
 
-module.exports = mongoose.model("users",schema);
+export default mongoose.model("users",schema);

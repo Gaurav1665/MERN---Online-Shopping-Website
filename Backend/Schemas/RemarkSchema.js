@@ -1,12 +1,15 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose';
 
 const schema = mongoose.Schema({
   RemarkId: Number,
   RemarkDescription: String,
   Rating: Number,
   UpdatedAt: String,
-  UserId: Number,
+  UserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users"
+  },
   ProductID: Number
 })
 
-module.exports = mongoose.model('remarks', schema)
+export default mongoose.model('remarks', schema)

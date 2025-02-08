@@ -1,10 +1,16 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const schema = mongoose.Schema({
     CartID: Number,
-    ProductID:Number,
+    ProductID:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "products"
+    },
     ProductQuantity:Number,
-    UserID: String,
+    UserID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+    },
 })
 
-module.exports = mongoose.model("carts",schema);
+export default mongoose.model("carts",schema);
