@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const schema = mongoose.Schema({
-  RemarkId: Number,
   RemarkDescription: String,
   Rating: Number,
   UpdatedAt: String,

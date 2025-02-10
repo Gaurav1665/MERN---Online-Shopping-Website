@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const schema = mongoose.Schema({
-    CategoryID: Number,
     CategoryName: String,
 })
 

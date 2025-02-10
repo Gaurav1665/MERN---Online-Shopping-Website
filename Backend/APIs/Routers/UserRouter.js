@@ -6,7 +6,6 @@ import path from 'path';
 import UserSchema from '../../Schemas/UserSchema.js';
 
 const router = express.Router();
-router.use(bodyParser.json());
 
 router.post("/login", async (req, res) => {
     const { UserEmail, UserPassword } = req.body;
@@ -27,7 +26,9 @@ router.post("/login", async (req, res) => {
 // Set up multer for file upload handling (User profile images)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../../../Images/UserImage'));
+        const uploadPath = path.join(__dirname, '../../../Images/UserImage');
+        console.log('Absolute upload path:', path.resolve(uploadPath));  // Log absolute path
+        cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -39,15 +40,19 @@ const upload = multer({ storage: storage });
 
 // Add User API (POST)
 router.post("/", upload.single('UserProfileImage'), async (req, res) => {
-    const { UserName, UserEmail, UserPassword, UserContact } = req.body;
+    const { UserName, UserEmail, UserPassword, UserContact, UserAddress, UserCity, UserState, UserCountry, UserPincode } = req.body;
     const UserProfileImage = req.file ? req.file.filename : null;
 
     const newUser = new UserSchema({
-        UserId,
         UserName,
         UserEmail,
         UserPassword,
         UserContact,
+        UserAddress,
+        UserCity,
+        UserState,
+        UserCountry,
+        UserPincode,
         UserProfileImage
     });
     
@@ -57,17 +62,21 @@ router.post("/", upload.single('UserProfileImage'), async (req, res) => {
 
 // Update User API (PUT)
 router.put("/:id", upload.single('UserProfileImage'), async (req, res) => {
-    const { UserName, UserEmail, UserPassword, UserContact } = req.body;
+    const { UserName, UserEmail, UserPassword, UserContact, UserAddress, UserCity, UserState, UserCountry, UserPincode } = req.body;
     const UserProfileImage = req.file ? req.file.filename : null;
 
     const updatedUser = await UserSchema.findByIdAndUpdate(
         req.params.id,
         { 
-            UserId,
-            UserName, 
-            UserEmail, 
-            UserPassword, 
-            UserContact, 
+            UserName,
+            UserEmail,
+            UserPassword,
+            UserContact,
+            UserAddress,
+            UserCity,
+            UserState,
+            UserCountry,
+            UserPincode, 
             UserProfileImage: UserProfileImage || undefined
         },
         { new: true }
@@ -79,15 +88,21 @@ router.put("/:id", upload.single('UserProfileImage'), async (req, res) => {
     res.send("User updated successfully");
 });
 
+// Get All Users
+router.get("/", async (req, res) => {
+    const data = await UserSchema.find();
+    res.send(data);
+});
+
 // Get User By ID
 router.get("/:id", async (req, res) => {
-    const data = await UserSchema.findOne({ UserId: req.params.id });
+    const data = await UserSchema.findOne({ _id: req.params.id });
     res.send(data);
 });
 
 // Delete User By ID
 router.delete("/:id", async (req, res) => {
-    const data = await UserSchema.deleteOne({ UserId: req.params.id });
+    const data = await UserSchema.deleteOne({ _id: req.params.id });
     res.send(data);
 });
 
