@@ -7,33 +7,25 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 // Get User Cart (by UserID)
-router.get("/:id", async (req, res) => {
-    const data = await CartSchema.find({ UserID: req.params.id });
+router.get("/:userId", async (req, res) => {
+    const data = await CartSchema.find({ UserID: req.params.userId });
     res.send(data);
 });
 
 // Empty Cart (by UserID)
-router.delete("/:id", async (req, res) => {
-    await CartSchema.deleteMany({ UserID: req.params.id });
+router.delete("/:userId", async (req, res) => {
+    await CartSchema.deleteMany({ UserID: req.params.userId });
     res.send("Cart emptied successfully");
 });
 
 // Add Item to Cart
-router.post("/:userId", async (req, res) => {
-    const { ProductID, ProductQuantity } = req.body;
-    const { userId } = req.params;
-    const existingItem = await CartSchema.findOne({ UserID: userId, ProductID });
-
-    if (existingItem) {
-        existingItem.ProductQuantity += ProductQuantity;
-        await existingItem.save();
-        return res.send("Product quantity updated");
-    }
+router.post("/", async (req, res) => {
+    const { ProductID, ProductQuantity, UserID } = req.body;
 
     const newCartItem = new CartSchema({
         ProductID,
         ProductQuantity,
-        UserID: userId
+        UserID
     });
 
     await newCartItem.save();
@@ -41,10 +33,10 @@ router.post("/:userId", async (req, res) => {
 });
 
 // Update Cart (by CartID)
-router.put("/item/:cartId", async (req, res) => {
-    const { cartId } = req.params;
+router.put("/item/:_id", async (req, res) => {
+    const { _id } = req.params;
     const { ProductQuantity } = req.body;
-    const cartItem = await CartSchema.findById(cartId);
+    const cartItem = await CartSchema.findById(_id);
 
     if (!cartItem) {
         return res.send("Cart item not found");

@@ -7,15 +7,15 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 // 1. Get All Wishlists
-router.get("/wishlists", async (req, res) => {
-    const wishlists = await WishlistSchema.find().populate("ProductID UserId");
+router.get("/", async (req, res) => {
+    const wishlists = await WishlistSchema.find();
     res.send(wishlists);
 });
 
-// 2. Get Wishlist by ID
-router.get("/wishlists/:id", async (req, res) => {
+// 2. Get Wishlist by UserID
+router.get("/:id", async (req, res) => {
     const { id } = req.params;
-    const wishlist = await WishlistSchema.findById(id).populate("ProductID UserId");
+    const wishlist = await WishlistSchema.find({UserId : id});
 
     if (!wishlist) {
         return res.send("Wishlist not found");
@@ -24,12 +24,11 @@ router.get("/wishlists/:id", async (req, res) => {
 });
 
 // 3. Insert a New Wishlist
-router.post("/wishlists", async (req, res) => {
-    const { WishlistId, ProductID, UserId } = req.body;
+router.post("/", async (req, res) => {
+    const { ProductId, UserId } = req.body;
 
     const newWishlist = new WishlistSchema({
-        WishlistId,
-        ProductID,
+        ProductId,
         UserId
     });
 
@@ -38,16 +37,15 @@ router.post("/wishlists", async (req, res) => {
 });
 
 // 4. Update Wishlist by ID
-router.put("/wishlists/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     const { id } = req.params;
-    const { WishlistId, ProductID, UserId } = req.body;
+    const { ProductID, UserId } = req.body;
     const wishlist = await WishlistSchema.findById(id);
 
     if (!wishlist) {
         return res.send("Wishlist not found");
     }
 
-    wishlist.WishlistId = WishlistId;
     wishlist.ProductID = ProductID;
     wishlist.UserId = UserId;
 
@@ -56,7 +54,7 @@ router.put("/wishlists/:id", async (req, res) => {
 });
 
 // 5. Delete Wishlist by ID
-router.delete("/wishlists/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     const wishlist = await WishlistSchema.findByIdAndDelete(id);
 

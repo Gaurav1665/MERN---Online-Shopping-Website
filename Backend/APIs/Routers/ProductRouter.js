@@ -22,11 +22,10 @@ const upload = multer({ storage: storage });
 
 // Add Product API (POST)
 router.post("/", upload.single('ProductImage'), async (req, res) => {
-    const { ProductID, ProductName, ProductDescription, ProductPrice, ProductQuantity, ProductDiscount, CategoryID } = req.body;
+    const { ProductName, ProductDescription, ProductPrice, ProductQuantity, ProductDiscount, CategoryID } = req.body;
     const ProductImage = req.file ? req.file.filename : null;
 
     const newProduct = new ProductSchema({
-        ProductID,
         ProductImage,
         ProductName,
         ProductDescription,
@@ -42,13 +41,12 @@ router.post("/", upload.single('ProductImage'), async (req, res) => {
 
 // Update Product API (PUT)
 router.put("/:id", upload.single('ProductImage'), async (req, res) => {
-    const { ProductID, ProductName, ProductDescription, ProductPrice, ProductQuantity, ProductDiscount, CategoryID } = req.body;
+    const { ProductName, ProductDescription, ProductPrice, ProductQuantity, ProductDiscount, CategoryID } = req.body;
     const ProductImage = req.file ? req.file.filename : null;
 
     const updatedProduct = await ProductSchema.findByIdAndUpdate(
         req.params.id,
         {
-            ProductID,
             ProductName,
             ProductDescription,
             ProductPrice,

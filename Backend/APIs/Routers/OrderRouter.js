@@ -7,15 +7,15 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 // 1. Get All Orders
-router.get("/orders", async (req, res) => {
-    const orders = await OrderSchema.find().populate("UserID ProductItems.ProductID");
+router.get("/", async (req, res) => {
+    const orders = await OrderSchema.find();
     res.send(orders);
 });
 
 // 2. Get Order by ID
-router.get("/orders/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     const { id } = req.params;
-    const order = await OrderSchema.findById(id).populate("UserID ProductItems.ProductID");
+    const order = await OrderSchema.findById(id);
 
     if (!order) {
         return res.send("Order not found");
@@ -24,11 +24,10 @@ router.get("/orders/:id", async (req, res) => {
 });
 
 // 3. Create New Order
-router.post("/orders", async (req, res) => {
-    const { OrderID, UserID, ProductItems, TotalAmount, OrderDate } = req.body;
+router.post("/", async (req, res) => {
+    const { UserID, ProductItems, TotalAmount, OrderDate } = req.body;
 
     const newOrder = new OrderSchema({
-        OrderID,
         UserID,
         ProductItems,
         TotalAmount,
@@ -40,7 +39,7 @@ router.post("/orders", async (req, res) => {
 });
 
 // 5. Delete Order by ID
-router.delete("/orders/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     const order = await OrderSchema.findByIdAndDelete(id);
     

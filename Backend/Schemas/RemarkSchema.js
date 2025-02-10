@@ -8,7 +8,10 @@ const schema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "users"
   },
-  ProductID: Number
+  ProductID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "products"
+  }
 })
 
 export default mongoose.model('remarks', schema)

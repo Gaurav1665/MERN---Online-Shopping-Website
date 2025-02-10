@@ -25,12 +25,9 @@ router.get("/:id", async (req, res) => {
 
 // 3. Insert a New Category
 router.post("/", async (req, res) => {
-    const { CategoryID, CategoryName } = req.body;
+    const { CategoryName } = req.body;
 
-    const newCategory = new CategorySchema({
-        CategoryID,
-        CategoryName
-    });
+    const newCategory = new CategorySchema({ CategoryName });
 
     await newCategory.save();
     res.send({ message: "Category created successfully", category: newCategory });
@@ -39,14 +36,13 @@ router.post("/", async (req, res) => {
 // 4. Update Category by ID
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
-    const { CategoryID, CategoryName } = req.body;
+    const { CategoryName } = req.body;
     const category = await CategorySchema.findById(id);
 
     if (!category) {
         return res.send("Category not found");
     }
     
-    category.CategoryID = CategoryID;
     category.CategoryName = CategoryName;
 
     await category.save();

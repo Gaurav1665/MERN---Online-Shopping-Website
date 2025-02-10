@@ -3,9 +3,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import UserSchema from '../../Schemas/UserSchema.js';
 
 const router = express.Router();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 router.post("/login", async (req, res) => {
     const { UserEmail, UserPassword } = req.body;
@@ -27,7 +31,7 @@ router.post("/login", async (req, res) => {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, '../../../Images/UserImage');
-        console.log('Absolute upload path:', path.resolve(uploadPath));  // Log absolute path
+        console.log('Absolute upload path:', path.resolve(uploadPath));
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {

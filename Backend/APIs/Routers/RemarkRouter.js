@@ -25,10 +25,9 @@ router.get("/remarks/:id", async (req, res) => {
 
 // 3. Insert a New Remark
 router.post("/remarks", async (req, res) => {
-    const { RemarkId, RemarkDescription, Rating, UpdatedAt, UserId, ProductID } = req.body;
+    const { RemarkDescription, Rating, UpdatedAt, UserId, ProductID } = req.body;
 
     const newRemark = new RemarkSchema({
-        RemarkId,
         RemarkDescription,
         Rating,
         UpdatedAt,
@@ -43,14 +42,13 @@ router.post("/remarks", async (req, res) => {
 // 4. Update Remark by ID
 router.put("/remarks/:id", async (req, res) => {
     const { id } = req.params;
-    const { RemarkId, RemarkDescription, Rating, UpdatedAt, UserId, ProductID } = req.body;
+    const { RemarkDescription, Rating, UpdatedAt, UserId, ProductID } = req.body;
     const remark = await RemarkSchema.findById(id);
 
     if (!remark) {
         return res.send("Remark not found");
     }
 
-    remark.RemarkId = RemarkId;
     remark.RemarkDescription = RemarkDescription;
     remark.Rating = Rating;
     remark.UpdatedAt = UpdatedAt;
