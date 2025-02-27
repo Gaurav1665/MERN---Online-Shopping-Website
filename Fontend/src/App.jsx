@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import MenuIcon from './assets/menu.svg'
+import UserIcon from './assets/user.svg'
+import WishlistIcon from './assets/wishlist.svg'
+import CartIcon from './assets/cart.svg'
+import RefreshIcon from './assets/refresh.svg'
+import LeafIcon from './assets/leaf.svg'
+import TruckIcon from './assets/truck.svg'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -188,9 +194,8 @@ function App() {
                   <img src="images/logo.svg" alt="logo" className="img-fluid"/>
                 </a>
               </div>
-              <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar">
-                <svg width="24" height="24" viewBox="0 0 24 24"><use xlinkHref="#menu"></use></svg>
+              <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <img src={MenuIcon} alt="menu" className="img-fluid" width={24} height={24}/>
               </button>
             </div>
             
@@ -244,17 +249,17 @@ function App() {
               <ul className="d-flex justify-content-end list-unstyled m-0">
                 <li>
                   <a href="#" className="p-2 mx-1">
-                    <svg width="24" height="24"><use xlinkHref="#user"></use></svg>
+                    <img src={UserIcon} alt="user" width={24} height={24} />
                   </a>
                 </li>
                 <li>
                   <a href="#" className="p-2 mx-1">
-                    <svg width="24" height="24"><use xlinkHref="#wishlist"></use></svg>
+                    <img src={WishlistIcon} alt="wishlist" width={24} height={24} />
                   </a>
                 </li>
                 <li>
                   <a href="#" className="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                    <svg width="24" height="24"><use xlinkHref="#shopping-bag"></use></svg>
+                    <img src={CartIcon} alt="cart" width={24} height={24} />
                   </a>
                 </li>
               </ul>
@@ -301,8 +306,8 @@ function App() {
             <div className="col">
               <div className="card border-0 bg-primary rounded-0 p-4 text-light">
                 <div className="row">
-                  <div className="col-md-3 text-center">
-                    <svg width="60" height="60"><use xlinkHref="#fresh"></use></svg>
+                  <div className="col-md-3 text-center ">
+                    <img src={RefreshIcon} alt="refresh" width={60} height={60} />
                   </div>
                   <div className="col-md-9">
                     <div className="card-body p-0">
@@ -317,7 +322,7 @@ function App() {
               <div className="card border-0 bg-secondary rounded-0 p-4 text-light">
                 <div className="row">
                   <div className="col-md-3 text-center">
-                    <svg width="60" height="60"><use xlinkHref="#organic"></use></svg>
+                    <img src={LeafIcon} alt="organic" width={60} height={60} />
                   </div>
                   <div className="col-md-9">
                     <div className="card-body p-0">
@@ -332,7 +337,7 @@ function App() {
               <div className="card border-0 bg-danger rounded-0 p-4 text-light">
                 <div className="row">
                   <div className="col-md-3 text-center">
-                    <svg width="60" height="60"><use xlinkHref="#delivery"></use></svg>
+                    <img src={TruckIcon} alt="delivery" width={60} height={60} />
                   </div>
                   <div className="col-md-9">
                     <div className="card-body p-0">
