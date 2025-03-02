@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import express from 'express'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 
 import { router as CartRouter} from './Routers/CartRouter.js'
@@ -13,7 +14,11 @@ import UserRouter from './Routers/UserRouter.js'
 import WishlistRouter from './Routers/WishlistRouter.js'
 
 const app = express();
-app.use(bodyParser.json())
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+}));
+app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/webecommerce').then(() => {
     console.log("Database Connected");

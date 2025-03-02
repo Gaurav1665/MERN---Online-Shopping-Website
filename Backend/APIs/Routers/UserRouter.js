@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
 // Set up multer for file upload handling (User profile images)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../../../Images/UserImage');
+        const uploadPath = path.join(__dirname, '../../../Frontend/public/Images/UserImage');
         console.log('Absolute upload path:', path.resolve(uploadPath));
         cb(null, uploadPath);
     },

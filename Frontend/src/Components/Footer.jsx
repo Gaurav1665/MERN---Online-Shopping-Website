@@ -1,3 +1,9 @@
+import FacebookIcon from './../assets/facebook.svg'
+import TwitterIcon from './../assets/twitter.svg'
+import YoutubeIcon from './../assets/youtube.svg'
+import InstagramIcon from './../assets/insta.svg'
+import AmazonIcon from './../assets/amazon.svg'
+
 export default function Footer() {
     return (
         <>
@@ -12,27 +18,27 @@ export default function Footer() {
                                     <ul className="d-flex list-unstyled gap-2">
                                         <li>
                                             <a href="#" className="btn btn-outline-light">
-                                                <svg width="16" height="16"><use xlinkHref="#facebook"></use></svg>
+                                                <img src={FacebookIcon} alt="facebook" width={25} height={25} />
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" className="btn btn-outline-light">
-                                                <svg width="16" height="16"><use xlinkHref="#twitter"></use></svg>
+                                                <img src={TwitterIcon} alt="twitter" width={25} height={25} />
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" className="btn btn-outline-light">
-                                                <svg width="16" height="16"><use xlinkHref="#youtube"></use></svg>
+                                                <img src={YoutubeIcon} alt="youtube" width={25} height={25} />
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" className="btn btn-outline-light">
-                                                <svg width="16" height="16"><use xlinkHref="#instagram"></use></svg>
+                                                <img src={InstagramIcon} alt="instagram" width={25} height={25} />
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#" className="btn btn-outline-light">
-                                                <svg width="16" height="16"><use xlinkHref="#amazon"></use></svg>
+                                                <img src={AmazonIcon} alt="amazon" width={25} height={25} />
                                             </a>
                                         </li>
                                     </ul>

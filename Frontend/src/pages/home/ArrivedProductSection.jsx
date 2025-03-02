@@ -1,4 +1,4 @@
-export default function ArrivedPorductSection() {
+export default function ArrivedProductSection() {
     return (
         <>
             <section id="latest-products" className="products-carousel">

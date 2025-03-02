@@ -1,3 +1,9 @@
+import PackageIcon from './../../assets/package.svg'
+import SecureIcon from './../../assets/secure.svg'
+import QualityIcon from './../../assets/quality.svg'
+import SavingsIcon from './../../assets/savings.svg'
+import GiftIcon from './../../assets/gift.svg'
+
 export default function FunctionalityCardSection() {
     return (
         <>
@@ -7,7 +13,7 @@ export default function FunctionalityCardSection() {
                         <div className="col">
                             <div className="card mb-3 border border-dark-subtle p-3">
                                 <div className="text-dark mb-3">
-                                    <svg width="32" height="32"><use xlinkHref="#package"></use></svg>
+                                    <img src={PackageIcon} alt="package" width={32} height={32} />
                                 </div>
                                 <div className="card-body p-0">
                                     <h5>Free delivery</h5>
@@ -18,7 +24,7 @@ export default function FunctionalityCardSection() {
                         <div className="col">
                             <div className="card mb-3 border border-dark-subtle p-3">
                                 <div className="text-dark mb-3">
-                                    <svg width="32" height="32"><use xlinkHref="#secure"></use></svg>
+                                    <img src={SecureIcon} alt="secure" width={32} height={32} />
                                 </div>
                                 <div className="card-body p-0">
                                     <h5>100% secure payment</h5>
@@ -29,7 +35,7 @@ export default function FunctionalityCardSection() {
                         <div className="col">
                             <div className="card mb-3 border border-dark-subtle p-3">
                                 <div className="text-dark mb-3">
-                                    <svg width="32" height="32"><use xlinkHref="#quality"></use></svg>
+                                    <img src={QualityIcon} alt="quality" width={32} height={32} />
                                 </div>
                                 <div className="card-body p-0">
                                     <h5>Quality guarantee</h5>
@@ -40,7 +46,7 @@ export default function FunctionalityCardSection() {
                         <div className="col">
                             <div className="card mb-3 border border-dark-subtle p-3">
                                 <div className="text-dark mb-3">
-                                    <svg width="32" height="32"><use xlinkHref="#savings"></use></svg>
+                                    <img src={SavingsIcon} alt="savings" width={32} height={32} />
                                 </div>
                                 <div className="card-body p-0">
                                     <h5>guaranteed savings</h5>
@@ -51,7 +57,7 @@ export default function FunctionalityCardSection() {
                         <div className="col">
                             <div className="card mb-3 border border-dark-subtle p-3">
                                 <div className="text-dark mb-3">
-                                    <svg width="32" height="32"><use xlinkHref="#offers"></use></svg>
+                                    <img src={GiftIcon} alt="offers" width={32} height={32} />
                                 </div>
                                 <div className="card-body p-0">
                                     <h5>Daily offers</h5>

@@ -2,6 +2,7 @@ import MenuIcon from './../assets/menu.svg'
 import UserIcon from './../assets/user.svg'
 import WishlistIcon from './../assets/wishlist.svg'
 import CartIcon from './../assets/cart.svg'
+import { Link } from 'react-router-dom';
 
 export default function Header() {
     return (
@@ -23,9 +24,9 @@ export default function Header() {
 
                         <div className="col-sm-6 offset-sm-2 offset-md-0 col-lg-4">
                             <div className="search-bar row bg-light p-2 rounded-4 justify-content-between"> 
-                                <div className="col-11 col-md-7">
-                                    <form id="search-form" className="text-center" action="index.html" method="post">
-                                        <input type="text" className="form-control border-0 bg-transparent" placeholder="Search for more than 20,000 products" />
+                                <div className="col-11">
+                                    <form id="search-form" className="text-center " action="index.html" method="post">
+                                        <input type="text" className="form-control border-0 bg-transparent w-100" placeholder="Search for more than 20,000 products" />
                                     </form>
                                 </div>
                                 <div className="col-1"> 
@@ -37,10 +38,10 @@ export default function Header() {
                         <div className="col-lg-4">
                             <ul className="navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                                 <li className="nav-item active">
-                                    <a href="index.html" className="nav-link">Home</a>
+                                    <Link className="nav-link" to="/">Home</Link>
                                 </li>
                                 <li className="nav-item active">
-                                    <a href="index.html" className="nav-link">Category</a>
+                                    <Link className="nav-link" to="/category">Category</Link>
                                 </li>
                                 <li className="nav-item active">
                                     <a href="index.html" className="nav-link">Orders</a>
