@@ -13,9 +13,9 @@ export default function Header() {
 
                         <div className="col-sm-4 col-lg-2 text-center text-sm-start d-flex gap-3 justify-content-center justify-content-md-start">
                             <div className="d-flex align-items-center my-3 my-sm-0">
-                                <a href="index.html">
+                                <Link to='/'>
                                     <img src="images/logo.svg" alt="logo" className="img-fluid" />
-                                </a>
+                                </Link>
                             </div>
                             <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                                 <img src={MenuIcon} alt="menu" className="img-fluid" width={24} height={24} />

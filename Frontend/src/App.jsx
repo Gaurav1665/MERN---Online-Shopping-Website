@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 import Layout from './Layout'
 import Home from "./pages/Home";
-import Category from "./pages/Category";
+import CategoryProducts from "./pages/CategoryProducts";
+import CategoryList from "./pages/CategoryList";
 
 
 function App() {
@@ -165,7 +166,8 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Layout />}>
                         <Route index element={ <Home /> } ></Route>
-                        <Route path="/category" element={ <Category /> } ></Route>
+                        <Route path="/category" element={ <CategoryList /> } ></Route>
+                        <Route path="/categoryproducts/:categoryId" element={<CategoryProducts />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
