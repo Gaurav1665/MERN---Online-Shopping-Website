@@ -32,7 +32,7 @@ mongoose.connect('mongodb://localhost:27017/webecommerce').then(() => {
     app.use("/user",UserRouter);
     app.use("/wishlist",WishlistRouter);
 
-    app.listen(3000,()=>{
-        console.log("Server Started at ",3000);
+    app.listen(process.env.SERVER_PORT,()=>{
+        console.log("Server Started at ",process.env.SERVER_PORT);
     })
 })

@@ -11,23 +11,6 @@ const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-router.post("/login", async (req, res) => {
-    const { UserEmail, UserPassword } = req.body;
-
-    const user = await UserSchema.findOne({ UserEmail });
-    
-    if (!user) {
-        return res.send("User not found");
-    }
-    const isMatch = UserPassword == user.UserPassword;
-    if (!isMatch) {
-        return res.send("Invalid credentials");
-    }
-
-    res.send("Login successful");
-});
-
-// Set up multer for file upload handling (User profile images)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, '../../../Frontend/public/Images/UserImage');
@@ -63,6 +46,30 @@ router.post("/", upload.single('UserProfileImage'), async (req, res) => {
     await newUser.save();
     res.send("User created successfully");
 });
+
+//Login API
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(400).json({ message: 'User not found' });
+      }
+  
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+  
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_KEY, { expiresIn: '1h' });
+  
+      res.json({ token });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
 
 // Update User API (PUT)
 router.put("/:id", upload.single('UserProfileImage'), async (req, res) => {

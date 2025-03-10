@@ -5,6 +5,7 @@ import Layout from './Layout'
 import Home from "./pages/Home";
 import CategoryProducts from "./pages/CategoryProducts";
 import CategoryList from "./pages/CategoryList";
+import Login from "./pages/Login";
 
 
 function App() {
@@ -168,6 +169,7 @@ function App() {
                         <Route index element={ <Home /> } ></Route>
                         <Route path="/category" element={ <CategoryList /> } ></Route>
                         <Route path="/categoryproducts/:categoryId" element={<CategoryProducts />} />
+                        <Route path="/login" element={ <Login /> } ></Route>
                     </Route>
                 </Routes>
             </BrowserRouter>
