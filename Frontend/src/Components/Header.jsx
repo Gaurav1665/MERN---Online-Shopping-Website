@@ -55,7 +55,7 @@ export default function Header() {
                         <div className="col-sm-8 col-lg-2 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
                             <ul className="d-flex justify-content-end list-unstyled m-0">
                                 {
-                                    console.log(localStorage.getItem("isLoggedIn")) != null 
+                                    localStorage.getItem("token") != null || sessionStorage.getItem("token") != null
                                     ? <>
                                         <li>
                                             <a href="#" className="p-2 mx-1">
@@ -95,23 +95,3 @@ export default function Header() {
         </>
     );
 }
-
-
-[
-    {
-        "_id": {
-          "$oid": "67c462190b9dfa8816202c62"
-        },
-        "CategoryImage": "CategoryImage-1740923417397-372171919.png",
-        "CategoryName": "Clothing",
-        "__v": 0
-    },
-    {
-        "_id": {
-          "$oid": "67c4624d0b9dfa8816202c64"
-        },
-        "CategoryImage": "CategoryImage-1740923469224-281578209.png",
-        "CategoryName": "Electronics",
-        "__v": 0
-    }
-]

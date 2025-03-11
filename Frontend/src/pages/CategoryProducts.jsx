@@ -9,7 +9,7 @@ export default function CategoryProducts(props) {
     const [productData, setProductData] = useState({});
 
     useEffect(()=>{
-        fetch(`http://localhost:3000/product/category/${categoryId}`)
+        fetch('http://localhost:3000/product/category/'+categoryId)
         .then((res) => res.json())
         .then((res) => {
             setProductData((prev) => ({ ...prev, [categoryId]: res }));

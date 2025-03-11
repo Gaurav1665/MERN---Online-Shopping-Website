@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import path from 'path';
+import jwt from 'jsonwebtoken'
 import { fileURLToPath } from 'url';
 import UserSchema from '../../Schemas/UserSchema.js';
 
@@ -49,20 +50,19 @@ router.post("/", upload.single('UserProfileImage'), async (req, res) => {
 
 //Login API
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { UserName, UserPassword } = req.body;
     
     try {
-      const user = await User.findOne({ username });
+      const user = await UserSchema.findOne({ UserName });
       if (!user) {
         return res.status(400).json({ message: 'User not found' });
       }
   
-      const isMatch = await user.comparePassword(password);
-      if (!isMatch) {
+      if (user.UserPassword != UserPassword) {
         return res.status(400).json({ message: 'Invalid credentials' });
       }
-  
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_KEY, { expiresIn: '1h' });
+        
+      const token = jwt.sign({ userId: user._id }, "privet", { expiresIn: '1h' });
   
       res.json({ token });
     } catch (error) {

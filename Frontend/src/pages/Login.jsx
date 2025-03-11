@@ -1,6 +1,6 @@
 // src/components/Login.js
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './login/login.css';
 
 
@@ -9,6 +9,7 @@ export default function Login(){
   const [data, setData] = useState({ username: "", password: "" });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [remember, setRemember] = useState(false);
   const navigate = useNavigate();
 
   // Handle form change
@@ -31,19 +32,19 @@ export default function Login(){
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/user/login', {
+      const response = await fetch('http://localhost:3000/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: data.username, password: data.password }),
+        body: JSON.stringify({ UserName: data.username, UserPassword: data.password }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('token', result.token);
-        navigate('/home');
+        remember ? localStorage.setItem('token', result.token) : sessionStorage.setItem('token', result.token) ;
+        navigate('/');
       } else {
         setError(result.message || 'Something went wrong');
       }
@@ -84,12 +85,29 @@ export default function Login(){
               required
             />
           </div>
+          
 
           {error && <div className="alert alert-danger">{error}</div>}
+
+          <div className="mb-3 form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="rememberMe"
+              name="rememberMe"
+              checked={remember}
+              onChange={()=>setRemember(!remember)}
+            />
+            <label className="form-check-label" htmlFor="rememberMe">Remember Me</label>
+          </div>
 
           <button type="submit" className="btn btn-primary w-100" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
+
+          <div className="mt-3 text-center">
+            <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+          </div>
         </form>
       </div>
     </div>
