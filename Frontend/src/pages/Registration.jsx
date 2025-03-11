@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import './login/login.css'; // Ensure the provided CSS is in this file.
+import { useNavigate } from 'react-router-dom';
+import './login/login.css';
 
 export default function Registration() {
   const [formData, setFormData] = useState({
-    UserProfileImage: '',
+    UserProfileImage: null,
     UserName: '',
     UserEmail: '',
     UserPassword: '',
@@ -17,86 +18,41 @@ export default function Registration() {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Handle image file change and upload it
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // You can add image validation here (e.g., check file type or size)
-
-      // Create a FormData object to send the file to the server
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // Upload the image to the server or cloud storage (this is just a placeholder URL)
-      setLoading(true);
-      fetch('http://localhost:3000/upload', {
-        method: 'POST',
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            // Assuming the server returns the URL of the uploaded image
-            setFormData((prevData) => ({
-              ...prevData,
-              UserProfileImage: data.imageUrl, // Store the image URL in state
-            }));
-          } else {
-            setError('Error uploading the image');
-          }
-        })
-        .catch(() => {
-          setError('Error uploading the image');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    setFormData((prevData) => ({ ...prevData, UserProfileImage: file }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Basic validation
-    if (
-      !formData.UserName ||
-      !formData.UserEmail ||
-      !formData.UserPassword ||
-      !formData.UserContact ||
-      !formData.UserAddress ||
-      !formData.UserCity ||
-      !formData.UserState ||
-      !formData.UserCountry ||
-      !formData.UserPincode
-    ) {
+    if (!Object.values(formData).filter(v => v !== null).every((field) => field)) {
       setError('All fields are required.');
       return;
     }
-
     setLoading(true);
     setError('');
 
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+
     try {
-      // Call to the backend to register the user (replace URL with your own)
       const response = await fetch('http://localhost:3000/user/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
-
       const result = await response.json();
-
+      localStorage.setItem('token', result.token);
+      navigate('/');
       if (response.ok) {
-        // Redirect to login or home page upon successful registration
-        // navigate('/login'); // Uncomment if you use react-router-dom for navigation
         alert('Registration successful!');
       } else {
         setError(result.message || 'Something went wrong');
@@ -109,175 +65,56 @@ export default function Registration() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
+    <div className="container d-flex flex-column align-items-center justify-content-center min-vh-100">
+      <div className="card shadow-lg p-4 rounded" style={{ maxWidth: '600px', width: '100%' }}>
         <h2 className="text-center mb-4">Register</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="UserProfileImage" className="form-label">
-              Profile Image
-            </label>
-            <input
-              type="file"
-              className="form-control"
-              id="UserProfileImage"
-              name="UserProfileImage"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-            {formData.UserProfileImage && (
-              <div className="mt-2">
-                <img
-                  src={formData.UserProfileImage}
-                  alt="Profile"
-                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                />
+        <form>
+          <div className="text-center mb-3">
+            <label htmlFor="UserProfileImage" className="position-relative">
+              <input type="file" id="UserProfileImage" className="d-none" accept="image/*" onChange={handleImageChange} />
+              <div
+                className="rounded-circle d-flex align-items-center justify-content-center bg-light card shadow-lg "
+                style={{ width: '150px', height: '150px', cursor: 'pointer', overflow: 'hidden', border: '5px solid rgb(74, 168, 71)' }}
+              >
+                {formData.UserProfileImage ? (
+                  <img src={formData.UserProfileImage ? URL.createObjectURL(formData.UserProfileImage) : ""} alt="Profile" className="w-100 h-100 card shadow-lg" style={{ objectFit: 'cover' }} />
+                ) : (
+                  <span className="text-muted">+</span>
+                )}
               </div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserName" className="form-label">
-              Username
             </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserName"
-              name="UserName"
-              value={formData.UserName}
-              onChange={handleChange}
-              required
-            />
           </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserEmail" className="form-label">
-              Email
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              id="UserEmail"
-              name="UserEmail"
-              value={formData.UserEmail}
-              onChange={handleChange}
-              required
-            />
+          <div className="row g-3">
+            <div className="col-md-6">
+              <input type="text" className="form-control form-control-lg" name="UserName" placeholder="Username" value={formData.UserName} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="email" className="form-control form-control-lg" name="UserEmail" placeholder="Email" value={formData.UserEmail} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="password" className="form-control form-control-lg" name="UserPassword" placeholder="Password" value={formData.UserPassword} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="text" className="form-control form-control-lg" name="UserContact" placeholder="Contact Number" value={formData.UserContact} onChange={handleChange} required />
+            </div>
+            <div className="col-md-12">
+              <input type="text" className="form-control form-control-lg" name="UserAddress" placeholder="Address" value={formData.UserAddress} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="text" className="form-control form-control-lg" name="UserCity" placeholder="City" value={formData.UserCity} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="text" className="form-control form-control-lg" name="UserState" placeholder="State" value={formData.UserState} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="text" className="form-control form-control-lg" name="UserCountry" placeholder="Country" value={formData.UserCountry} onChange={handleChange} required />
+            </div>
+            <div className="col-md-6">
+              <input type="text" className="form-control form-control-lg" name="UserPincode" placeholder="Pincode" value={formData.UserPincode} onChange={handleChange} required />
+            </div>
           </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserPassword" className="form-label">
-              Password
-            </label>
-            <input
-              type="password"
-              className="form-control"
-              id="UserPassword"
-              name="UserPassword"
-              value={formData.UserPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserContact" className="form-label">
-              Contact Number
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserContact"
-              name="UserContact"
-              value={formData.UserContact}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserAddress" className="form-label">
-              Address
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserAddress"
-              name="UserAddress"
-              value={formData.UserAddress}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserCity" className="form-label">
-              City
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserCity"
-              name="UserCity"
-              value={formData.UserCity}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserState" className="form-label">
-              State
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserState"
-              name="UserState"
-              value={formData.UserState}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserCountry" className="form-label">
-              Country
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserCountry"
-              name="UserCountry"
-              value={formData.UserCountry}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="UserPincode" className="form-label">
-              Pincode
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="UserPincode"
-              name="UserPincode"
-              value={formData.UserPincode}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={loading}
-          >
+          {error && <div className="alert alert-danger mt-3">{error}</div>}
+          <button type="submit" className="btn btn-primary w-100 mt-3" disabled={loading} >
             {loading ? 'Registering...' : 'Register'}
           </button>
         </form>

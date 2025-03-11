@@ -2,9 +2,47 @@ import MenuIcon from './../assets/menu.svg'
 import UserIcon from './../assets/user.svg'
 import WishlistIcon from './../assets/wishlist.svg'
 import CartIcon from './../assets/cart.svg'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
+    const [userData, setUserData] = useState({});
+    const navigate = useNavigate();
+
+    async function getUserData(token) {
+        try {
+          const response = await fetch('http://localhost:3000/user/getOne', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          throw error;
+        }
+      }
+      
+      // Example usage in a component:
+      useEffect(() => {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (token) {
+          getUserData(token)
+            .then((userData) => {
+                setUserData(userData);
+            })
+            .catch((error) => {
+                console.log(error);                
+            });
+        }
+      }, []);
+
     return (
         <>
             <header>
@@ -17,9 +55,6 @@ export default function Header() {
                                     <img src="images/logo.svg" alt="logo" className="img-fluid" />
                                 </Link>
                             </div>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                                <img src={MenuIcon} alt="menu" className="img-fluid" width={24} height={24} />
-                            </button>
                         </div>
 
                         <div className="col-sm-6 offset-sm-2 offset-md-0 col-lg-4">
@@ -56,36 +91,45 @@ export default function Header() {
                             <ul className="d-flex justify-content-end list-unstyled m-0">
                                 {
                                     localStorage.getItem("token") != null || sessionStorage.getItem("token") != null
-                                    ? <>
-                                        <li>
+                                    ?   <li>
                                             <a href="#" className="p-2 mx-1">
-                                                <img src={UserIcon} alt="user" width={24} height={24} />
+                                                <img src={'./../../Images/userImage/'+userData.UserProfileImage} alt="user" width={24} height={24} />
                                             </a>
                                         </li>
-                                    </> 
-                                    : <>
-                                        <li>
-                                            <Link to='/login'>
-                                                <h5 className='mx-2'>Log in</h5>
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link to='/login'>
-                                                <h5 className='mx-2'>Sign up</h5>
-                                            </Link>
-                                        </li>
-                                    </>
+                                    :   <>
+                                            <li>
+                                                <Link to='/login'>
+                                                    <h5 className='mx-2'>Log in</h5>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to='/register'>
+                                                    <h5 className='mx-2'>Sign up</h5>
+                                                </Link>
+                                            </li>
+                                        </>
                                 }
                                 <li>
                                     <a href="#" className="p-2 mx-1">
-                                        <img src={WishlistIcon} alt="wishlist" width={24} height={24} />
+                                        <img src={WishlistIcon} alt="wishlist" width={32} height={32} />
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" className="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                                        <img src={CartIcon} alt="cart" width={24} height={24} />
+                                        <img src={CartIcon} alt="cart" width={32} height={32} />
                                     </a>
                                 </li>
+                                { 
+                                    localStorage.getItem("token") != null || sessionStorage.getItem("token") != null 
+                                    ?   <li>
+                                            <button onClick={()=>{
+                                                if(localStorage.getItem("token") != null) localStorage.removeItem("token");
+                                                else if(sessionStorage.getItem("token") != null) sessionStorage.removeItem("token");
+                                                navigate("/");
+                                            }}>Log out</button>
+                                        </li> 
+                                    : null
+                                }
                             </ul>
                         </div>
 

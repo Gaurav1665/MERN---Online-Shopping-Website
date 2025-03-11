@@ -39,8 +39,8 @@ export default function CategorySection() {
                                 <div className="swiper-wrapper">
                                     {
                                         categoryData.map((d)=>(
-                                            <Link to={'/categoryproducts/'+d._id} className="nav-link swiper-slide text-center" key={d._id}>
-                                                <img src={'./../../Images/CategoryImage/'+d.CategoryImage} className="rounded-circle" alt="Category Thumbnail" />
+                                            <Link to={'/categoryproducts/'+d._id} className="nav-link swiper-slide text-center" key={d._id}>    
+                                                <img src={'./../../../Images/CategoryImage/'+d.CategoryImage} className="rounded-circle" alt="Category Thumbnail" />
                                                 <h4 className="fs-6 mt-3 fw-normal category-title">{ d.CategoryName }</h4>
                                             </Link>
                                         ))

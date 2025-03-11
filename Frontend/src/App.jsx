@@ -10,157 +10,79 @@ import Registration from "./pages/Registration";
 
 
 function App() {
-    const [count, setCount] = useState(0);
 
-    var initPreloader = function () {
-        $(document).ready(function ($) {
-            var Body = $("body");
-            Body.addClass("preloader-site");
-        });
-        $(window).load(function () {
-            $(".preloader-wrapper").fadeOut();
-            $("body").removeClass("preloader-site");
-        });
-    };
-
-    // init Chocolat light box
-    var initChocolat = function () {
-        Chocolat(document.querySelectorAll(".image-link"), {
-            imageSize: "contain",
-            loop: true,
-        });
-    };
-
-    var initSwiper = function () {
-        var swiper = new Swiper(".main-swiper", {
+    useEffect(() => {
+        const initSwiper = () => {
+          // Main swiper initialization
+          const mainSwiper = new Swiper(".main-swiper", {
             speed: 500,
             pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
+              el: ".swiper-pagination",
+              clickable: true,
             },
-        });
-
-        var category_swiper = new Swiper(".category-carousel", {
+          });
+    
+          // Category carousel swiper
+          const categorySwiper = new Swiper(".category-carousel", {
             slidesPerView: 8,
             spaceBetween: 30,
             speed: 500,
             navigation: {
-                nextEl: ".category-carousel-next",
-                prevEl: ".category-carousel-prev",
+              nextEl: ".category-carousel-next",
+              prevEl: ".category-carousel-prev",
             },
             breakpoints: {
-                0: {
-                slidesPerView: 2,
-                },
-                768: {
-                slidesPerView: 3,
-                },
-                991: {
-                slidesPerView: 5,
-                },
-                1500: {
-                slidesPerView: 8,
-                },
+              0: { slidesPerView: 2 },
+              768: { slidesPerView: 3 },
+              991: { slidesPerView: 5 },
+              1500: { slidesPerView: 8 },
             },
-        });
-
-        $(".products-carousel").each(function () {
-            var $el_id = $(this).attr("id");
-
-            var products_swiper = new Swiper("#" + $el_id + " .swiper", {
-                slidesPerView: 5,
-                spaceBetween: 30,
-                speed: 500,
-                navigation: {
-                nextEl: "#" + $el_id + " .products-carousel-next",
-                prevEl: "#" + $el_id + " .products-carousel-prev",
-                },
-                breakpoints: {
-                0: {
-                    slidesPerView: 1,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                991: {
-                    slidesPerView: 4,
-                },
-                1500: {
-                    slidesPerView: 5,
-                },
-                },
+          });
+    
+          $(".products-carousel").each(function () {
+            const $elId = $(this).attr("id");
+            const productSwiper = new Swiper(`#${$elId} .swiper`, {
+              slidesPerView: 5,
+              spaceBetween: 30,
+              speed: 500,
+              navigation: {
+                nextEl: `#${$elId} .products-carousel-next`,
+                prevEl: `#${$elId} .products-carousel-prev`,
+              },
+              breakpoints: {
+                0: { slidesPerView: 1 },
+                768: { slidesPerView: 3 },
+                991: { slidesPerView: 4 },
+                1500: { slidesPerView: 5 },
+              },
             });
-        });
-
-        // product single page
-        var thumb_slider = new Swiper(".product-thumbnail-slider", {
+          });
+    
+          const thumbSlider = new Swiper(".product-thumbnail-slider", {
             slidesPerView: 5,
             spaceBetween: 20,
-            // autoplay: true,
             direction: "vertical",
             breakpoints: {
-                0: {
-                direction: "horizontal",
-                },
-                992: {
-                direction: "vertical",
-                },
+              0: { direction: "horizontal" },
+              992: { direction: "vertical" },
             },
-        });
-
-        var large_slider = new Swiper(".product-large-slider", {
+          });
+    
+          const largeSlider = new Swiper(".product-large-slider", {
             slidesPerView: 1,
-            // autoplay: true,
             spaceBetween: 0,
             effect: "fade",
-            thumbs: {
-                swiper: thumb_slider,
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-        });
-    };
-
-    // input spinner
-    var initProductQty = function () {
-        $(".product-qty").each(function () {
-            var $el_product = $(this);
-            var quantity = 0;
-
-            $el_product.find(".quantity-right-plus").click(function (e) {
-                e.preventDefault();
-                quantity = parseInt($el_product.find("#quantity").val());
-                $el_product.find("#quantity").val(quantity + 1);
-            });
-
-            $el_product.find(".quantity-left-minus").click(function (e) {
-                e.preventDefault();
-                quantity = parseInt($el_product.find("#quantity").val());
-                if (quantity > 0) {
-                $el_product.find("#quantity").val(quantity - 1);
-                }
-            });
-        });
-    };
-
-    // init jarallax parallax
-    var initJarallax = function () {
-        jarallax(document.querySelectorAll(".jarallax"));
-
-        jarallax(document.querySelectorAll(".jarallax-keep-img"), {
-            keepImg: true,
-        });
-    };
-
-    useEffect(() => {
-        initPreloader();
+            thumbs: { swiper: thumbSlider },
+            pagination: { el: ".swiper-pagination", clickable: true },
+          });
+        };
+    
         initSwiper();
-        initProductQty();
-        initJarallax();
-        initChocolat();
-    });
+    
+        return () => {
+          Swiper.instances.forEach((swiper) => swiper.destroy());
+        };
+      }, []);
 
     return (
         <>
@@ -171,7 +93,7 @@ function App() {
                         <Route path="/category" element={ <CategoryList /> } ></Route>
                         <Route path="/categoryproducts/:categoryId" element={<CategoryProducts />} />
                         <Route path="/login" element={ <Login /> } ></Route>
-                        <Route path='register' element={ <Registration /> } ></Route>
+                        <Route path='/register' element={ <Registration /> } ></Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

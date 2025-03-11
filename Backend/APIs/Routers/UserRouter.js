@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import bodyParser from 'body-parser';
+import bcrypt from 'bcryptjs';
 import multer from 'multer';
 import path from 'path';
 import jwt from 'jsonwebtoken'
 import { fileURLToPath } from 'url';
 import UserSchema from '../../Schemas/UserSchema.js';
+import fs from 'fs';
 
 const router = express.Router();
 
@@ -13,40 +14,73 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../../../Frontend/public/Images/UserImage');
-        console.log('Absolute upload path:', path.resolve(uploadPath));
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '../../../Frontend/public/Images/UserImage');
+    fs.mkdirSync(uploadPath, { recursive: true });
+    console.log('Absolute upload path:', path.resolve(uploadPath));
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  },
 });
 
 const upload = multer({ storage: storage });
 
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+  
+    if (token == null) return res.sendStatus(401);
+  
+    jwt.verify(token, 'private', (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+};
+
 // Add User API (POST)
-router.post("/", upload.single('UserProfileImage'), async (req, res) => {
+router.post('/register', upload.single('UserProfileImage'), async (req, res) => {
+  try {
+    console.log('File received:', req.file);
     const { UserName, UserEmail, UserPassword, UserContact, UserAddress, UserCity, UserState, UserCountry, UserPincode } = req.body;
     const UserProfileImage = req.file ? req.file.filename : null;
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(UserPassword, salt);
+
+    const existingUser = await UserSchema.findOne({ UserEmail });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+
     const newUser = new UserSchema({
-        UserName,
-        UserEmail,
-        UserPassword,
-        UserContact,
-        UserAddress,
-        UserCity,
-        UserState,
-        UserCountry,
-        UserPincode,
-        UserProfileImage
+      UserName,
+      UserEmail,
+      UserPassword: hashedPassword,
+      UserContact,
+      UserAddress,
+      UserCity,
+      UserState,
+      UserCountry,
+      UserPincode,
+      UserProfileImage,
     });
+
+    const data = await newUser.save();
+    const token = jwt.sign({ userId: data._id }, 'private', { expiresIn: '1h' });
+    console.log(data._id);
     
-    await newUser.save();
-    res.send("User created successfully");
+    res.json({ token });
+  } catch (error) {
+    console.log(error.message);
+    
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
+  
 
 //Login API
 router.post('/login', async (req, res) => {
@@ -62,8 +96,9 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ message: 'Invalid credentials' });
       }
         
-      const token = jwt.sign({ userId: user._id }, "privet", { expiresIn: '1h' });
-  
+      const token = jwt.sign({ userId: user._id }, "private");
+      console.log(user._id);
+      
       res.json({ token });
     } catch (error) {
       res.status(500).json({ message: 'Server error' });
@@ -106,9 +141,20 @@ router.get("/", async (req, res) => {
 });
 
 // Get User By ID
-router.get("/:id", async (req, res) => {
-    const data = await UserSchema.findOne({ _id: req.params.id });
-    res.send(data);
+router.get("/getOne", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const data = await UserSchema.findOne({ _id: userId });
+  
+        if (!data) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+  
+        res.send(data);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
 });
 
 // Delete User By ID

@@ -263,7 +263,7 @@ h1,h2,h3,h4,h5,h6 {
   
 }
 
-/* Swiper carousel */
+/* Styling for Swiper buttons */
 .swiper-prev,
 .swiper-next {
   width: 38px;
@@ -274,18 +274,26 @@ h1,h2,h3,h4,h5,h6 {
   padding: 0;
   text-align: center;
   border-radius: 10px;
-  --bs-btn-border-color: transparent;
-  --bs-btn-active-bg: #ec9b22;
-  --bs-btn-active-border-color: transparent;
-  --bs-btn-hover-bg: var(--bs-primary);
-  --bs-btn-hover-border-color: transparent;
-  --bs-btn-disabled-color: #ccc;
-  --bs-btn-disabled-bg: #eaeaea;
-  --bs-btn-disabled-border-color: #eaeaea
+  border: none; /* Prevent border from btn class */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px; /* Adjusted font size for arrows */
+  transition: background 0.3s ease;
 }
+
+/* Hover state for buttons */
 .swiper-prev:hover,
 .swiper-next:hover {
-  background: var(--bs-primary);
+  background: var(--bs-primary); /* Ensure --bs-primary is defined in your CSS */
+}
+
+/* Custom styling for button when disabled */
+.swiper-prev:disabled,
+.swiper-next:disabled {
+  background: #eaeaea;
+  color: #ccc;
+  cursor: not-allowed;
 }
 
 /* category carousel */
