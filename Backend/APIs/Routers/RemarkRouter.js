@@ -1,21 +1,37 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken'
 import RemarkSchema from '../../Schemas/RemarkSchema.js';
 
 const router = express.Router();
 router.use(bodyParser.json());
 
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+  
+    if (token == null) return res.sendStatus(401);
+  
+    jwt.verify(token, 'private', (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+};
+
 // 1. Get All Remarks
-router.get("/remarks", async (req, res) => {
+router.get("/", async (req, res) => {
     const remarks = await RemarkSchema.find();
     res.send(remarks);
 });
 
-// 2. Get Remark by ID
-router.get("/remarks/:id", async (req, res) => {
+// 2. Get Remark by ProductID
+router.get("/product/:id", async (req, res) => {
     const { id } = req.params;
-    const remark = await RemarkSchema.findById(id);
+    const remark = await RemarkSchema.find({ ProductID: id });
+    console.log(remark);
+    
 
     if (!remark) {
         return res.send("Remark not found");
@@ -24,8 +40,10 @@ router.get("/remarks/:id", async (req, res) => {
 });
 
 // 3. Insert a New Remark
-router.post("/remarks", async (req, res) => {
-    const { RemarkDescription, Rating, UpdatedAt, UserId, ProductID } = req.body;
+router.post("/addRemarks",authenticateToken, async (req, res) => {
+    const UserId = req.user.userId;
+    const UpdatedAt = new Date();
+    const { RemarkDescription, Rating, ProductID } = req.body;
 
     const newRemark = new RemarkSchema({
         RemarkDescription,

@@ -182,3 +182,74 @@
   },
   "__v": 0
 }]
+
+
+<===========================================User Data===========================================>
+
+
+{
+  "_id": {
+    "$oid": "67d18ff9e9285bd8ca03454e"
+  },
+  "UserProfileImage": "UserProfileImage-1741787129819-539354789.png",
+  "UserName": "Ida Gaurav",
+  "UserEmail": "idagaurav421@gmail.com",
+  "UserPassword": "123456",
+  "UserContact": 1234567980,
+  "UserAddress": "abc Xyz road",
+  "UserCity": "Rajkot",
+  "UserState": "Gujarat",
+  "UserCountry": "India",
+  "UserPincode": 360002,
+  "__v": 0
+}
+
+
+<===========================================Remark Data===========================================>
+
+
+[{
+  "_id": {
+    "$oid": "67d19d28d0957e65de6bef49"
+  },
+  "RemarkDescription": "This is the best product",
+  "Rating": 5,
+  "UpdatedAt": "Wed Mar 12 2025 20:11:44 GMT+0530 (India Standard Time)",
+  "UserId": {
+    "$oid": "67d18ff9e9285bd8ca03454e"
+  },
+  "ProductID": {
+    "$oid": "67c48e8a9322b7b744fc9363"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d19d72d0957e65de6bef4e"
+  },
+  "RemarkDescription": "asfddgffsd",
+  "Rating": 3,
+  "UpdatedAt": "Wed Mar 12 2025 20:12:58 GMT+0530 (India Standard Time)",
+  "UserId": {
+    "$oid": "67d18ff9e9285bd8ca03454e"
+  },
+  "ProductID": {
+    "$oid": "67c48e8a9322b7b744fc9363"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d1c2a5d0957e65de6befb0"
+  },
+  "RemarkDescription": "dfsdgf",
+  "Rating": 1,
+  "UpdatedAt": "Wed Mar 12 2025 22:51:41 GMT+0530 (India Standard Time)",
+  "UserId": {
+    "$oid": "67d18ff9e9285bd8ca03454e"
+  },
+  "ProductID": {
+    "$oid": "67c48e8a9322b7b744fc9363"
+  },
+  "__v": 0
+}]

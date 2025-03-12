@@ -1,5 +1,3 @@
-import MenuIcon from './../assets/menu.svg'
-import UserIcon from './../assets/user.svg'
 import WishlistIcon from './../assets/wishlist.svg'
 import CartIcon from './../assets/cart.svg'
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,7 +9,7 @@ export default function Header() {
 
     async function getUserData(token) {
         try {
-          const response = await fetch('http://localhost:3000/user/getOne', {
+          const response = await fetch('http://localhost:3000/user/getOneAuth', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -93,7 +91,7 @@ export default function Header() {
                                     localStorage.getItem("token") != null || sessionStorage.getItem("token") != null
                                     ?   <li>
                                             <a href="#" className="p-2 mx-1">
-                                                <img src={'./../../Images/userImage/'+userData.UserProfileImage} alt="user" width={24} height={24} />
+                                                <img src={'./../../Images/UserImage/'+userData.UserProfileImage} alt="user" width={32} height={32} />
                                             </a>
                                         </li>
                                     :   <>

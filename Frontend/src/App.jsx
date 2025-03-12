@@ -7,6 +7,7 @@ import CategoryProducts from "./pages/CategoryProducts";
 import CategoryList from "./pages/CategoryList";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
+import ProductDetail from "./pages/ProductDetail";
 
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
                         <Route path="/categoryproducts/:categoryId" element={<CategoryProducts />} />
                         <Route path="/login" element={ <Login /> } ></Route>
                         <Route path='/register' element={ <Registration /> } ></Route>
+                        <Route path="/product/:productId" element={<ProductDetail />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

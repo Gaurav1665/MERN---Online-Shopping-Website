@@ -50,15 +50,14 @@ export default function Registration() {
         body: formDataToSend,
       });
       const result = await response.json();
-      localStorage.setItem('token', result.token);
-      navigate('/');
       if (response.ok) {
-        alert('Registration successful!');
+        localStorage.setItem('token', result.token);
+        navigate('/');
       } else {
         setError(result.message || 'Something went wrong');
       }
     } catch (err) {
-      setError('Error while communicating with the server');
+      setError(err+' Error while communicating with the server');
     } finally {
       setLoading(false);
     }
@@ -68,7 +67,7 @@ export default function Registration() {
     <div className="container d-flex flex-column align-items-center justify-content-center min-vh-100">
       <div className="card shadow-lg p-4 rounded" style={{ maxWidth: '600px', width: '100%' }}>
         <h2 className="text-center mb-4">Register</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="text-center mb-3">
             <label htmlFor="UserProfileImage" className="position-relative">
               <input type="file" id="UserProfileImage" className="d-none" accept="image/*" onChange={handleImageChange} />

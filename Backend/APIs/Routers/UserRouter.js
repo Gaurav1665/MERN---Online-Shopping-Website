@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import bcrypt from 'bcryptjs';
 import multer from 'multer';
 import path from 'path';
 import jwt from 'jsonwebtoken'
@@ -48,9 +47,6 @@ router.post('/register', upload.single('UserProfileImage'), async (req, res) => 
     const { UserName, UserEmail, UserPassword, UserContact, UserAddress, UserCity, UserState, UserCountry, UserPincode } = req.body;
     const UserProfileImage = req.file ? req.file.filename : null;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(UserPassword, salt);
-
     const existingUser = await UserSchema.findOne({ UserEmail });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
@@ -59,7 +55,7 @@ router.post('/register', upload.single('UserProfileImage'), async (req, res) => 
     const newUser = new UserSchema({
       UserName,
       UserEmail,
-      UserPassword: hashedPassword,
+      UserPassword,
       UserContact,
       UserAddress,
       UserCity,
@@ -141,7 +137,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get User By ID
-router.get("/getOne", authenticateToken, async (req, res) => {
+router.get("/getOneAuth", authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const data = await UserSchema.findOne({ _id: userId });
@@ -155,6 +151,23 @@ router.get("/getOne", authenticateToken, async (req, res) => {
         console.error('Error fetching user:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
+});
+
+
+router.get("/getOne/:id", async (req, res) => {
+  try {
+      const userId = req.params.id;
+      const data = await UserSchema.findOne({ _id: userId });
+
+      if (!data) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.send(data);
+  } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 // Delete User By ID
