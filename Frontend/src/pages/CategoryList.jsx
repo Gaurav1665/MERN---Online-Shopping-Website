@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function CategoryList(){
     const [categoryData, setCategoryData] = useState([]);
+    const [remarksData, setRemarksData] = useState({});
     
     useEffect(() => {
         // Fetch categories data

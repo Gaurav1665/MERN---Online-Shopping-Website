@@ -16,7 +16,6 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = path.join(__dirname, '../../../Frontend/public/Images/UserImage');
     fs.mkdirSync(uploadPath, { recursive: true });
-    console.log('Absolute upload path:', path.resolve(uploadPath));
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -43,7 +42,6 @@ const authenticateToken = (req, res, next) => {
 // Add User API (POST)
 router.post('/register', upload.single('UserProfileImage'), async (req, res) => {
   try {
-    console.log('File received:', req.file);
     const { UserName, UserEmail, UserPassword, UserContact, UserAddress, UserCity, UserState, UserCountry, UserPincode } = req.body;
     const UserProfileImage = req.file ? req.file.filename : null;
 
@@ -67,12 +65,9 @@ router.post('/register', upload.single('UserProfileImage'), async (req, res) => 
 
     const data = await newUser.save();
     const token = jwt.sign({ userId: data._id }, 'private', { expiresIn: '1h' });
-    console.log(data._id);
     
     res.json({ token });
-  } catch (error) {
-    console.log(error.message);
-    
+  } catch (error) {    
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
@@ -93,7 +88,6 @@ router.post('/login', async (req, res) => {
       }
         
       const token = jwt.sign({ userId: user._id }, "private");
-      console.log(user._id);
       
       res.json({ token });
     } catch (error) {

@@ -29,9 +29,7 @@ router.get("/", async (req, res) => {
 // 2. Get Remark by ProductID
 router.get("/product/:id", async (req, res) => {
     const { id } = req.params;
-    const remark = await RemarkSchema.find({ ProductID: id });
-    console.log(remark);
-    
+    const remark = await RemarkSchema.find({ ProductID: id });    
 
     if (!remark) {
         return res.send("Remark not found");

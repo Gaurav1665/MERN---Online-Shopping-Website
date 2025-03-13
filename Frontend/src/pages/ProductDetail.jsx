@@ -77,7 +77,6 @@ export default function ProductDetail(props) {
     fetch('http://localhost:3000/remark/product/' + productId)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         const totalRating = data.reduce((sum, remark) => sum + remark.Rating, 0);
         setPreviousRating(data.length > 0 ? totalRating / data.length : 0);
         setRemarks(data);
@@ -93,7 +92,6 @@ export default function ProductDetail(props) {
         ProductID: productId,
       };
 
-      console.log(localStorage.getItem("token") || sessionStorage.getItem("token"));
       fetch(`http://localhost:3000/remark/addRemarks`, {
         method: "POST",
         headers: {
@@ -114,36 +112,34 @@ export default function ProductDetail(props) {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-md-4">
           <img
-            src={`./../../Images/ProductImage/${productData.ProductImage}`}
+            src={'./../../Images/ProductImage/'+productData.ProductImage}
             alt={productData.ProductName}
-            style={{ width: "100%", borderRadius: "8px", objectFit: "cover" }}
+            style={{ width:"100%", borderRadius: "8px", objectFit: "cover" }}
           />
         </div>
-        <div className="col-md-6">
-          <h2>{productData.ProductName}</h2>
+        <div className="col-md-8">
+          <h2 className="display-4">{productData.ProductName}</h2>
           <div className="rating">
             <StarRating rating={previousRating} />
           </div>
           <p>{productData.ProductDescription}</p>
-          <div>
-            <del>₹{productData.ProductPrice}</del>
-            <span>
+          <div className="d-flex  align-items-center gap-2">
+            <del className="h4">₹{productData.ProductPrice}</del>
+            <span className="text-dark fw-semibold h2">
               ₹{productData.ProductPrice - (productData.ProductPrice * (productData.ProductDiscount / 100))}
             </span>
-            <span>{productData.ProductDiscount}% OFF</span>
+            <span className="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
+              {productData.ProductDiscount}% OFF
+            </span>
           </div>
 
-          <div className="d-flex justify-content-between mt-4">
-            <input
-              type="number"
-              name="quantity"
-              className="form-control"
-              defaultValue="1"
-              min="1"
-            />
-            <button className="btn btn-primary">Add to Cart</button>
+          <div className="d-flex justify-content-center width-100">
+            <div className="d-flex gap-3">
+              <input type="number" name="quantity" className="form-control" defaultValue="1" min="1"/>
+              <button className="btn btn-primary">Add to Cart</button>
+            </div>
           </div>
         </div>
       </div>

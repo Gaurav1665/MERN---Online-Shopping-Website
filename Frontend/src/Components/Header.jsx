@@ -1,5 +1,5 @@
 import WishlistIcon from './../assets/wishlist.svg'
-import CartIcon from './../assets/cart.svg'
+import CartIcon from './../assets/cart-dark.svg'
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 

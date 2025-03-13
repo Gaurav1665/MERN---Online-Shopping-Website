@@ -1,4 +1,4 @@
-import CartIcon from './../../assets/cart.svg'
+import CartIcon from './../../assets/cart-dark.svg'
 import WishlistIcon from './../../assets/wishlist.svg'
 
 export default function BestProductSection() {

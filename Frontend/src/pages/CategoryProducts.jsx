@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import WishlistIcon from './../assets/wishlist.svg'
+import CartIcon from './../assets/cart-light.svg'
 import StarFullIcon from './../assets/star-full.svg';
 import StarHalfIcon from './../assets/star-half.svg';
 import StarEmptyIcon from './../assets/star-empty.svg';
@@ -28,7 +30,6 @@ const StarRating = ({ rating }) => {
       {[...Array(emptyStars)].map((_, index) => (
         <span key={`empty-${index}`}>{renderStar('empty')}</span>
       ))}
-      <span> ({rating})</span>
     </div>
   );
 };
@@ -49,7 +50,6 @@ export default function CategoryProducts() {
     fetch('http://localhost:3000/remark/product/'+productId)
       .then((res) => res.json())
       .then((remarks) => {
-        console.log(remarks);
         const totalRating = remarks.reduce((sum, remark) => sum + remark.Rating, 0);
         const averageRating = remarks.length > 0 ? totalRating / remarks.length : 0;
         setRemarksData((prev) => ({ ...prev, [productId]: averageRating }));
@@ -83,7 +83,7 @@ export default function CategoryProducts() {
               </figure>
               <div className="d-flex flex-column text-center">
                 <h3 className="fs-6 fw-normal">{productObj.ProductName}</h3>
-                <div>
+                <div className="d-flex justify-content-center">
                   <StarRating rating={averageRating} />
                   <span>({productObj.ProductPurchaseCount})</span>
                 </div>
@@ -103,17 +103,13 @@ export default function CategoryProducts() {
                     </div>
                     <div className="col-7">
                       <a href="#" className="btn btn-primary rounded-1 p-2 fs-7 btn-cart">
-                        <svg width="18" height="18">
-                          <use xlinkHref="#cart"></use>
-                        </svg>
+                        <img src={CartIcon} alt="cart" height={18} width={18} />
                         Add to Cart
                       </a>
                     </div>
                     <div className="col-2">
                       <a href="#" className="btn btn-outline-dark rounded-1 p-2 fs-6">
-                        <svg width="18" height="18">
-                          <use xlinkHref="#heart"></use>
-                        </svg>
+                        <img src={WishlistIcon} alt="cart" height={18} width={18} />
                       </a>
                     </div>
                   </div>
