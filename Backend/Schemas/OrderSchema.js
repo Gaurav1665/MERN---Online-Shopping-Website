@@ -13,7 +13,12 @@ const orderSchema = mongoose.Schema({
         ProductQuantity: Number
     }],
     TotalAmount: Number,
-    OrderDate: Date
+    OrderDate: Date,
+    status: {   // Added field
+        type: String,
+        enum: ['Pending', 'Delivered'],
+        default: 'Pending'  // Default status is Pending
+    }
 });
 
 export default mongoose.model('orders', orderSchema);

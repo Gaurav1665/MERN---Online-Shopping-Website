@@ -77,10 +77,10 @@ export default function Header() {
                                     <Link className="nav-link" to="/category">Category</Link>
                                 </li>
                                 <li className="nav-item active">
-                                    <a href="index.html" className="nav-link">Orders</a>
+                                    <Link className="nav-link" to="/order" >Orders</Link>
                                 </li>
                                 <li className="nav-item active">
-                                    <a href="index.html" className="nav-link">About Us</a>
+                                    <Link className="nav-link" to="/order">About Us</Link>
                                 </li>
                             </ul>
                         </div>
@@ -108,14 +108,14 @@ export default function Header() {
                                         </>
                                 }
                                 <li>
-                                    <a href="#" className="p-2 mx-1">
+                                    <Link to="/wishlist" className="p-2 mx-1" >
                                         <img src={WishlistIcon} alt="wishlist" width={32} height={32} />
-                                    </a>
+                                    </Link>
                                 </li>
                                 <li>
-                                    <a href="#" className="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                                    <Link to="/cart" className="p-2 mx-1" >
                                         <img src={CartIcon} alt="cart" width={32} height={32} />
-                                    </a>
+                                    </Link>
                                 </li>
                                 { 
                                     localStorage.getItem("token") != null || sessionStorage.getItem("token") != null 

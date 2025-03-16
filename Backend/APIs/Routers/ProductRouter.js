@@ -70,6 +70,21 @@ router.put("/:id", upload.single('ProductImage'), async (req, res) => {
     res.send("Product updated successfully");
 });
 
+
+router.get('/best_selling', async (req, res) => {
+    try {
+        const bestSellingProducts = await ProductSchema.find().sort({ ProductPurchaseCount: -1 }).limit(6);
+        
+        if (bestSellingProducts.length === 0) {
+            return res.status(404).json({ message: "No best-selling products found." });
+        }
+        res.json(bestSellingProducts);
+    } catch (error) {
+        console.error("Error fetching best-selling products:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 // Get Product By ID (GET)
 router.get("/:id", async (req, res) => {
     const product = await ProductSchema.findById(req.params.id);
@@ -105,5 +120,6 @@ router.delete("/:id", async (req, res) => {
     }
     res.send("Product deleted successfully");
 });
+
 
 export default router;
