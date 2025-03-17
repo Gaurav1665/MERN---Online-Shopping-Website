@@ -10,28 +10,16 @@ const StarRating = ({ rating }) => {
     const halfStars = rating % 1 >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStars;
 
-    const renderStar = (type) => {
-        if (type === "full") {
-            return <img src={StarFullIcon} alt="star-full" width={18} height={18} />;
-        } else if (type === "half") {
-            return <img src={StarHalfIcon} alt="star-half" width={18} height={18} />;
-        } else {
-            return (
-                <img src={StarEmptyIcon} alt="star-empty" width={18} height={18} />
-            );
-        }
-    };
-
     return (
         <div className="star-rating">
             {[...Array(fullStars)].map((_, index) => (
-                <span key={`full-${index}`}>{renderStar("full")}</span>
+                <img key={`full-${index}`} src={StarFullIcon} alt="full-star" width={18} height={18} />
             ))}
-            {halfStars === 1 && <span>{renderStar("half")}</span>}
+            {halfStars === 1 && <img src={StarHalfIcon} alt="half-star" width={18} height={18} />}
             {[...Array(emptyStars)].map((_, index) => (
-                <span key={`empty-${index}`}>{renderStar("empty")}</span>
+                <img key={`empty-${index}`} src={StarEmptyIcon} alt="empty-star" width={18} height={18} />
             ))}
-            <span> ({rating})</span>
+            <span> ({rating.toFixed(1)})</span>
         </div>
     );
 };
@@ -43,41 +31,39 @@ export default function BestProductSection() {
     useEffect(() => {
         const fetchBestSellingProducts = async () => {
             try {
-                
                 const response = await fetch('http://localhost:3000/product/best_selling');
-            
                 if (!response.ok) {
-                    throw new Error(`Error fetching best-selling products: ${response.statusText}`);
+                    throw new Error("Failed to fetch best-selling products");
                 }
-                
                 const data = await response.json();
-                console.log(bestSellingProducts);
-                
                 setBestSellingProducts(data);
-                console.log(bestSellingProducts);
             } catch (err) {
                 console.error("Error fetching best-selling products:", err);
             }
         };
-    
+
         fetchBestSellingProducts();
     }, []);
 
     useEffect(() => {
-            bestSellingProducts.forEach((productObj) => {
-                fetchRemarksForProduct(productObj._id);
-            });
-        }, [bestSellingProducts]);
+        bestSellingProducts.forEach((productObj) => {
+            fetchRemarksForProduct(productObj._id);
+        });
+    }, [bestSellingProducts]);
 
-    const fetchRemarksForProduct = (productId) => {
-        fetch('http://localhost:3000/remark/product/' + productId)
-            .then((res) => res.json())
-            .then((remarks) => {
-                const totalRating = remarks.reduce((sum, remark) => sum + remark.Rating, 0);
-                const averageRating = remarks.length > 0 ? totalRating / remarks.length : 0;
-                setRemarksData((prev) => ({ ...prev, [productId]: averageRating }));
-            })
-            .catch((error) => console.error("Error fetching remarks:", error));
+    const fetchRemarksForProduct = async (productId) => {
+        try {
+            const response = await fetch(`http://localhost:3000/remark/product/${productId}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch remarks for product ${productId}`);
+            }
+            const remarks = await response.json();
+            const totalRating = remarks.reduce((sum, remark) => sum + remark.Rating, 0);
+            const averageRating = remarks.length > 0 ? totalRating / remarks.length : 0;
+            setRemarksData((prev) => ({ ...prev, [productId]: averageRating }));
+        } catch (error) {
+            console.error("Error fetching remarks:", error);
+        }
     };
 
     return (
@@ -97,55 +83,64 @@ export default function BestProductSection() {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
-                            {bestSellingProducts.map((product) => {
-                                const averageRating = remarksData[product._id] || 0;
-                                <div className="col" key={product._id}>
-                                    <div className="product-item">
-                                        <figure>
-                                            <a href={`product/${product._id}`} title={product.ProductName}>
-                                                <img src={`/Images/ProductImage/${product.ProductImage}`} alt={product.ProductName} className="tab-image" />
-                                            </a>
-                                        </figure>
-                                        <div className="d-flex flex-column text-center">
-                                            <h3 className="fs-6 fw-normal">{product.ProductName}</h3>
-                                            <div className="d-flex justify-content-center">
-                                                <StarRating rating={averageRating} />
-                                                <span>({productObj.ProductPurchaseCount})</span>
-                                            </div>
-                                            <div className="d-flex justify-content-center align-items-center gap-2">
-                                                <del>${product.ProductPrice}</del>
-                                                <span className="text-dark fw-semibold">${(product.ProductPrice - product.ProductDiscount).toFixed(2)}</span>
-                                                <span className="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
-                                                    {product.ProductDiscount}% OFF
-                                                </span>
-                                            </div>
-                                            <div className="button-area p-3 pt-0">
-                                                <div className="row g-1 mt-2">
-                                                    <div className="col-3">
-                                                        <input
-                                                            type="number"
-                                                            name="quantity"
-                                                            className="form-control border-dark-subtle input-number quantity"
-                                                            value="1"
-                                                            onChange={() => { }}
-                                                        />
+                            {bestSellingProducts.length > 0 ? (
+                                bestSellingProducts.map((product) => {
+                                    const averageRating = remarksData[product._id] || 0;
+                                    return (
+                                        <div className="col" key={product._id}>
+                                            <div className="product-item">
+                                                <figure>
+                                                    <a href={`product/${product._id}`} title={product.ProductName}>
+                                                        <img src={`/Images/ProductImage/${product.ProductImage}`} alt={product.ProductName} className="tab-image" />
+                                                    </a>
+                                                </figure>
+                                                <div className="d-flex flex-column text-center">
+                                                    <h3 className="fs-6 fw-normal">{product.ProductName}</h3>
+                                                    <div className="d-flex justify-content-center">
+                                                        <StarRating rating={averageRating} />
+                                                        <span>({product.ProductPurchaseCount})</span>
                                                     </div>
-                                                    <div className="col-7">
-                                                        <a href="#" className="btn btn-primary rounded-1 p-2 fs-7 btn-cart">
-                                                            <img src={CartIcon} alt="cart" width={24} height={24} /> Add to Cart
-                                                        </a>
+                                                    <div className="d-flex justify-content-center align-items-center gap-2">
+                                                        <del>${product.ProductPrice}</del>
+                                                        <span className="text-dark fw-semibold">
+                                                            ${(product.ProductPrice - product.ProductDiscount).toFixed(2)}
+                                                        </span>
+                                                        <span className="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
+                                                            {product.ProductDiscount}% OFF
+                                                        </span>
                                                     </div>
-                                                    <div className="col-2">
-                                                        <a href="#" className="btn btn-outline-dark rounded-1 p-2 fs-6">
-                                                            <img src={WishlistIcon} alt="wishlist" width={24} height={24} />
-                                                        </a>
+                                                    <div className="button-area p-3 pt-0">
+                                                        <div className="row g-1 mt-2">
+                                                            <div className="col-3">
+                                                                <input
+                                                                    type="number"
+                                                                    name="quantity"
+                                                                    className="form-control border-dark-subtle input-number quantity"
+                                                                    defaultValue="1"
+                                                                />
+                                                            </div>
+                                                            <div className="col-7">
+                                                                <a href="#" className="btn btn-primary rounded-1 p-2 fs-7 btn-cart">
+                                                                    <img src={CartIcon} alt="cart" width={24} height={24} /> Add to Cart
+                                                                </a>
+                                                            </div>
+                                                            <div className="col-2">
+                                                                <a href="#" className="btn btn-outline-dark rounded-1 p-2 fs-6">
+                                                                    <img src={WishlistIcon} alt="wishlist" width={24} height={24} />
+                                                                </a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="col-12 text-center">
+                                    <p>No best-selling products available.</p>
                                 </div>
-                            })}
+                            )}
                         </div>
                     </div>
                 </div>
